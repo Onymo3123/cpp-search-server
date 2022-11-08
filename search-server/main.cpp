@@ -57,20 +57,18 @@ public:
         }
     }
 
-    void AddDocument(int document_id, const string& document) {
+  void AddDocument(int document_id, const string& document) {
         const vector<string> words = SplitIntoWordsNoStop(document);
         
         document_count_++;
-        if(!words.empty()){
+    if(!words.empty()){ 
         int words_in_doc = words.size();
         
-       for(string g: words){
-        word_to_document_freqs_[g][document_id] += 1.0/words_in_doc ;
-        
-       
-       
-
-    }}}
+       for(const &string g: words){
+             word_to_document_freqs_[g][document_id] += 1.0/words_in_doc;
+       }
+    }
+  }
 
     vector<Document> FindTopDocuments(const string& raw_query) const {
         const Query query_words = ParseQuery(raw_query);
@@ -87,7 +85,6 @@ public:
     }
 
 private:
-    int count_documents = 0;
 
     map<int, int> count_word_;
 
@@ -95,13 +92,7 @@ private:
         set<string> plus_words;
         set<string> minus_words;
     };
-     /*struct DocumentContent {
-        int id = 0;
-        vector<string> words;
-    };
-
-    vector<DocumentContent> documents_;*/
-
+     
     int document_count_ = 0;
 
     map<string, map<int, double>> word_to_document_freqs_;
@@ -128,10 +119,9 @@ private:
         Query query_words;
         for (string word : SplitIntoWordsNoStop(text)) {
             if (word[0] == '-'){
-
-            query_words.minus_words.insert(word.substr(1));
+                query_words.minus_words.insert(word.substr(1));
             }else{
-            query_words.plus_words.insert(word);
+                query_words.plus_words.insert(word);
             }
         }
         for (string word : query_words.plus_words ){
@@ -147,36 +137,30 @@ private:
         map<int, double> document_to_relevance;
         vector<Document> matched_documents;
         
-        double EDF = 0;
-              if(!query_words.plus_words.empty()){
-                  for(string word:query_words.plus_words){
-                      if  (word_to_document_freqs_.count(word)>0){
-                          
-                           EDF = log(1.0*document_count_/word_to_document_freqs_.at(word).size());// исправил подсчет EDF теперь он выдает корректныое значение
-                           
-                            for(auto& d:word_to_document_freqs_.at(word)){
-                               document_to_relevance[d.first]+=(EDF*d.second); 
-                            }                      
-                       }
-                   }
-                  
-                  
-                  if((!query_words.minus_words.empty())&&(!matched_documents.empty())){
-                      
-                      for(auto& word:query_words.minus_words){                    // добавил проверку и удаление минус слов из выборки + поприличнее оформил код
-                          if(word_to_document_freqs_.count(word)){
-                              for (const auto [document_id, _] :  word_to_document_freqs_.at(word)) {
-                                      document_to_relevance.erase(document_id);
-                                   }
-                          }    
+        double IDF = 0;
+              if (!query_words.plus_words.empty()) {
+                  for (string word:query_words.plus_words) {
+                      if (word_to_document_freqs_.count(word)>0) {
+                           IDF = log(1.0*document_count_/word_to_document_freqs_.at(word).size());// исправил подсчет EDF теперь он выдает корректныое значение
+                           for (auto& [var1, var2]:word_to_document_freqs_.at(word)) {
+                               document_to_relevance[var1]+=(IDF*var2); 
+                           }                      
                       }
                   }
                   
-                      for(auto& document:document_to_relevance){
-                          
-                               matched_documents.push_back({document.first,document.second});
-                          
-                      }
+                  
+                  if((!query_words.minus_words.empty())&&(!matched_documents.empty())){
+                            for(const auto& word:query_words.minus_words){                    // добавил проверку и удаление минус слов из выборки + поприличнее оформил код
+                                 if(word_to_document_freqs_.count(word)){
+                                      for (const auto& [document_id, _] :  word_to_document_freqs_.at(word)) {
+                                              document_to_relevance.erase(document_id);
+                                       }
+                                 }    
+                            }
+                  }
+                  for(auto& document:document_to_relevance){
+                          matched_documents.push_back({document.first,document.second});
+                   }
                   
               }
         return matched_documents;
@@ -186,21 +170,13 @@ private:
         if (query_words.plus_words.empty()) {
             return 0;
         }
-
-
-
-        set<string> matched_words;
-
-
-
-
             if ((query_words.minus_words.count(content) != 0)){
                  return 0;
             }
+        set<string> matched_words;
             if ((query_words.plus_words.count(content) != 0)) {
                 matched_words.insert(content);
             }
-
         return static_cast<int>(matched_words.size());
     }
 };

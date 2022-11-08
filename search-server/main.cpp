@@ -134,11 +134,11 @@ private:
             query_words.plus_words.insert(word);
             }
         }
-        /*for (string word : query_words.plus_words ){
+        for (string word : query_words.plus_words ){
             if (query_words.minus_words.count(word)>0){
                 query_words.plus_words.erase(word);
             }
-        }*/
+        }
 
         return query_words;
     }
@@ -152,23 +152,31 @@ private:
                   for(string word:query_words.plus_words){
                       if  (word_to_document_freqs_.count(word)>0){
                           
-                          EDF = log(1.0*document_count_/word_to_document_freqs_.at(word).size());
-                          
-                          if (query_words.minus_words.count(word)){//не знаю законно ли но я решил что минус слова лучше не добавлять, чем потом убирать 
-                              EDF = -1000;
-                              
-                          }
-                          
+                           EDF = log(1.0*document_count_/word_to_document_freqs_.at(word).size());// исправил подсчет EDF теперь он выдает корректныое значение
+                           
                             for(auto& d:word_to_document_freqs_.at(word)){
                                document_to_relevance[d.first]+=(EDF*d.second); 
                             }                      
-                  }}
+                       }
+                   }
                   
-                  for(auto& document:document_to_relevance){
-                      if (document.second>-1){//но из-за того что ln дает 0 приходится захватывать его
-                     matched_documents.push_back({document.first,document.second});
+                  
+                  if((!query_words.minus_words.empty())&&(!matched_documents.empty())){
+                      
+                      for(auto& word:query_words.minus_words){                    // добавил проверку и удаление минус слов из выборки + постарался поприличнее оформил код
+                          if(word_to_document_freqs_.count(word)){
+                              for (const auto [document_id, _] :  word_to_document_freqs_.at(word)) {
+                                      document_to_relevance.erase(document_id);
+                                   }
+                          }    
                       }
                   }
+                  
+                      for(auto& document:document_to_relevance){
+                          
+                               matched_documents.push_back({document.first,document.second});
+                          
+                      }
                   
               }
         return matched_documents;

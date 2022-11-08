@@ -64,7 +64,7 @@ public:
     if(!words.empty()){ 
         int words_in_doc = words.size();
         
-       for(const &string g: words){
+       for(const string& g: words){
              word_to_document_freqs_[g][document_id] += 1.0/words_in_doc;
        }
     }

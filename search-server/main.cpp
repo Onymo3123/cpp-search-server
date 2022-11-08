@@ -163,7 +163,7 @@ private:
                   
                   if((!query_words.minus_words.empty())&&(!matched_documents.empty())){
                       
-                      for(auto& word:query_words.minus_words){                    // добавил проверку и удаление минус слов из выборки + постарался поприличнее оформил код
+                      for(auto& word:query_words.minus_words){                    // добавил проверку и удаление минус слов из выборки + поприличнее оформил код
                           if(word_to_document_freqs_.count(word)){
                               for (const auto [document_id, _] :  word_to_document_freqs_.at(word)) {
                                       document_to_relevance.erase(document_id);

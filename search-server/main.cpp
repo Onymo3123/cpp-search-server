@@ -77,8 +77,8 @@ public:
     
  
 
-template <typename Predicate>
-vector<Document> FindTopDocuments(const string& raw_query,
+  template <typename Predicate>
+  vector<Document> FindTopDocuments(const string& raw_query,
                                       Predicate predicate) const {
         const Query query = ParseQuery(raw_query);
         auto matched_documents = FindAllDocuments(query, predicate);
@@ -99,21 +99,21 @@ vector<Document> FindTopDocuments(const string& raw_query,
     }
     
 
-    vector<Document> FindTopDocuments(const string& raw_query) const {
+  vector<Document> FindTopDocuments(const string& raw_query) const {
         auto matched_documents = FindTopDocuments(raw_query, DocumentStatus::ACTUAL);
         return matched_documents;
-    }
+}
     
-    vector<Document> FindTopDocuments(const string& raw_query, DocumentStatus status_) const {
+  vector<Document> FindTopDocuments(const string& raw_query, DocumentStatus status_) const {
         auto matched_documents = FindTopDocuments(raw_query, [status_](int document_id, DocumentStatus status, int rating) { return status == status_; });
         return matched_documents;
-    }
+}
 
-    int GetDocumentCount() const {
+  int GetDocumentCount() const {
         return documents_.size();
-    }
+}
 
-    tuple<vector<string>, DocumentStatus> MatchDocument(const string& raw_query,
+  tuple<vector<string>, DocumentStatus> MatchDocument(const string& raw_query,
                                                         int document_id) const {
         const Query query = ParseQuery(raw_query);
         vector<string> matched_words;
@@ -135,7 +135,7 @@ vector<Document> FindTopDocuments(const string& raw_query,
             }
         }
         return {matched_words, documents_.at(document_id).status};
-    }
+   }
 
 private:
     struct DocumentData {

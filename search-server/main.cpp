@@ -43,7 +43,6 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
         double check[3] = {0.274653,0.101366,0.101366};
         SearchServer search_server;
         search_server.SetStopWords("и в на"s);
-
         search_server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, {8, -3});
         search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
         search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL,
@@ -63,7 +62,6 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
         double check[3] = {5,8,-3};
         SearchServer search_server;
         search_server.SetStopWords("и в на"s);
-
         search_server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, {8, 8, 8, 8, 8});
         search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {-7, -1, -2, -3, -4});
         search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL,
@@ -84,7 +82,6 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
        int id = 0;
         SearchServer search_server;
         search_server.SetStopWords("и в на"s);
-
         search_server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, {8, 8, 8, 8, 8});
         search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::IRRELEVANT, {-7, -1, -2, -3, -4});
         search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::BANNED,
@@ -106,7 +103,6 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
         int id = 1;
         SearchServer search_server;
         search_server.SetStopWords("и в на"s);
-
         search_server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, {8, 8, 8, 8, 8});
         search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::IRRELEVANT, {-7, -1, -2, -3, -4});
         search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::BANNED,

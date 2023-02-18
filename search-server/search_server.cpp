@@ -1,8 +1,6 @@
 #include "search_server.h"
-
 #include <string>
 #include <stdexcept>
-
 #include <cmath>
 
 
@@ -12,9 +10,7 @@
  
      SearchServer::SearchServer(const std::string& stop_words_text)
         : SearchServer(
-            SplitIntoWords(stop_words_text))  // Invoke delegating constructor from string container
-    {
-    }
+            SplitIntoWords(stop_words_text))  {}
  
     void SearchServer::AddDocument(int document_id, const std::string& document, DocumentStatus status,
                      const std::vector<int>& ratings) {
@@ -30,8 +26,6 @@
         documents_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status});
         document_ids_.push_back(document_id);
     }
- 
-    
  
     int SearchServer::GetDocumentCount() const {
         return documents_.size();
@@ -65,9 +59,6 @@
         }
         return {matched_words, documents_.at(document_id).status};
     }
- 
-
-    
  
     bool SearchServer::IsStopWord(const std::string& word) const {
         return stop_words_.count(word) > 0;
@@ -104,8 +95,6 @@
         return rating_sum / static_cast<int>(ratings.size());
     }
  
-   
- 
     SearchServer::QueryWord SearchServer::ParseQueryWord(const std::string& text) const {
         if (text.empty()) {
             throw std::invalid_argument("Query word is empty");
@@ -123,8 +112,6 @@
         return {word, is_minus, IsStopWord(word)};
     }
  
-    
- 
     SearchServer::Query SearchServer::ParseQuery(const std::string& text) const {
         Query result;
         for (const std::string& word : SplitIntoWords(text)) {
@@ -140,7 +127,6 @@
         return result;
     }
  
-    // Existence required
     double SearchServer::ComputeWordInverseDocumentFreq(const std::string& word) const {
         return std::log(GetDocumentCount() * 1.0 / word_to_document_freqs_.at(word).size());
     }

@@ -1,3 +1,4 @@
+// в качестве заготовки кода используйте последнюю версию своей поисковой системы
 #include "search_server.h"
 #include <string>
 #include <stdexcept>
@@ -22,6 +23,7 @@
         const double inv_word_count = 1.0 / words.size();
         for (const std::string& word : words) {
             word_to_document_freqs_[word][document_id] += inv_word_count;
+            word_freqs_[document_id][word] += inv_word_count;
         }
         documents_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status});
         document_ids_.push_back(document_id);
@@ -34,7 +36,45 @@
     int SearchServer::GetDocumentId(int index) const {
         return document_ids_.at(index);
     }
- 
+
+    void SearchServer::RemoveDocument(int document_id){
+        
+        {
+        auto doc = documents_.find(document_id);
+        documents_.erase(doc);
+        }
+        {
+        auto doc = find(document_ids_.begin(),document_ids_.end(),document_id);
+        document_ids_.erase(doc);  
+        }
+    }
+
+    std::vector<int>::iterator SearchServer::begin(){
+         return document_ids_.begin();
+     }
+    
+    std::vector<int>::const_iterator SearchServer::begin() const{
+        return document_ids_.begin();
+    }
+    
+    std::vector<int>::iterator SearchServer::end(){
+        return document_ids_.end();
+    }
+    
+    std::vector<int>::const_iterator SearchServer::end() const{
+        return document_ids_.end();
+    }
+
+    const std::map<std::string, double>& SearchServer::GetWordFrequencies (int document_id) const{
+     static std::map<std::string, double> result;
+        for(auto page:word_freqs_){
+                if(page.first == document_id){
+                    result = (page.second);
+                } 
+        }
+        return result;
+    }
+
     std::tuple<std::vector<std::string>, DocumentStatus> SearchServer::MatchDocument(const std::string& raw_query,
                                                         int document_id) const {
         const auto query = ParseQuery(raw_query);
@@ -130,7 +170,3 @@
     double SearchServer::ComputeWordInverseDocumentFreq(const std::string& word) const {
         return std::log(GetDocumentCount() * 1.0 / word_to_document_freqs_.at(word).size());
     }
- 
-
-
-   

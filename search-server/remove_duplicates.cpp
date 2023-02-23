@@ -7,21 +7,21 @@
 void RemoveDuplicates(SearchServer& search_server){
     std::map<std::string, double> word_freqs;
     std::map<std::set<std::string>, int> docs;
-    std::vector<int> Doc_mast_dell;
+    std::vector<int> docs_to_delete;
     std::set<std::string> document;
     for (auto document_id : search_server) {
         word_freqs = search_server.GetWordFrequencies(document_id);
-        for (auto f : word_freqs) {
-           document.insert(f.first);
+        for (auto word_frequency_pair : word_freqs) {
+        document.insert(word_frequency_pair.first);
         }
         if (docs.count(document)>0) {
-           Doc_mast_dell.push_back(document_id);
+            docs_to_delete.push_back(document_id);
         } else {
-           docs[document] = document_id;
+           docs[document] =  document_id;
         }
         document={}; 
     } 
-    for (auto id : Doc_mast_dell) {
+    for(auto id : docs_to_delete){
     std::cout << "Found duplicate document id " << id << std::endl; 
     search_server.RemoveDocument(id);
     }

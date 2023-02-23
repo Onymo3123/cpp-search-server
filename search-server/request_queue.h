@@ -36,21 +36,21 @@ private:
 };
 
 template <typename DocumentPredicate>
-    std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query, DocumentPredicate document_predicate) {
-        std::vector<Document> result {};
-        result = server_.FindTopDocuments(raw_query, document_predicate);
-        if(result.empty() && (requests_.size() < min_in_day_)){
-          count++;
-          requests_.push_back({raw_query,1,count});
-        }else if((result.empty() && (requests_.size() >= min_in_day_))){
-          requests_.pop_front();
-          requests_.push_back({raw_query,1,count});
-        }else if(!result.empty()&&(requests_.size() < min_in_day_)){
-           requests_.push_back({raw_query,0,count});
-        }else if(!result.empty()&&(requests_.size() >= min_in_day_)){
-          count--;
-          requests_.push_back({raw_query,0,count});
-          requests_.pop_front();
-        }
-        return result;
+std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query, DocumentPredicate document_predicate) {
+    std::vector<Document> result {};
+    result = server_.FindTopDocuments(raw_query, document_predicate);
+    if (result.empty() && (requests_.size() < min_in_day_)) {
+        count++;
+        requests_.push_back({raw_query,1,count});
+    } else if ((result.empty() && (requests_.size() >= min_in_day_))) {
+        requests_.pop_front();
+        requests_.push_back({raw_query,1,count});
+    } else if (!result.empty()&&(requests_.size() < min_in_day_)) {
+        requests_.push_back({raw_query,0,count});
+    } else if (!result.empty()&&(requests_.size() >= min_in_day_)) {
+        count--;
+        requests_.push_back({raw_query,0,count});
+        requests_.pop_front();
     }
+    return result;
+}

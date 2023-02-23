@@ -12,12 +12,12 @@ void RemoveDuplicates(SearchServer& search_server){
     for (auto document_id : search_server) {
         word_freqs = search_server.GetWordFrequencies(document_id);
         for (auto f : word_freqs) {
-        document.insert(f.first);
+           document.insert(f.first);
         }
         if (docs.count(document)>0) {
-            Doc_mast_dell.push_back(document_id);
+           Doc_mast_dell.push_back(document_id);
         } else {
-           docs[document] =  document_id;
+           docs[document] = document_id;
         }
         document={}; 
     } 

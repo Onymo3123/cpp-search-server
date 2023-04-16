@@ -1,11 +1,10 @@
-#include "document.h"
-#include <string>
+#include "document.h" 
+#include <string> 
 
 std::ostream& operator<<(std::ostream& o, const Document doc) {
-            o << "{ "
+            o << "{ " 
             << "document_id = " << doc.id << ", "
-            << "relevance = " << doc.relevance << ", "
-            << "rating = " << doc.rating << " }";
-    
-    return o;
+            << "relevance = " << doc.relevance << ", " 
+            << "rating = " << doc.rating << " }"; 
+    return o; 
 }

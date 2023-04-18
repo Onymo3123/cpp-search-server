@@ -14,19 +14,16 @@ void SearchServer::AddDocument(int document_id, const std::string_view document,
     if ((document_id < 0) || (documents_.count(document_id) > 0)) {
         throw std::invalid_argument("Invalid document_id");
     }
-    DocumentData buf;
-    buf.base.push_back({document.begin(), document.end()});
-    const auto words = SplitIntoWordsNoStop(buf.base.back());
+    base.push_back({document.begin(), document.end()});
+    const auto words = SplitIntoWordsNoStop(base.back());
     const double inv_word_count = 1.0 / words.size();
     for (const std::string_view word : words) { 
         word_to_document_freqs_[word][document_id] += inv_word_count;
         word_freqs_[document_id][word] += inv_word_count; 
     } 
-    buf.rating = ComputeAverageRating(ratings);
-    buf.status = status;
-    documents_.emplace(document_id, std::move(buf));
+    documents_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status});
     document_ids_.insert(document_id); 
-    } 
+} 
 
 int SearchServer::GetDocumentCount() const { 
     return documents_.size(); 

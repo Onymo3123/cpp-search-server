@@ -20,10 +20,9 @@ class SearchServer {
 public: 
 
     template <typename StringContainer> 
-
     explicit SearchServer(const StringContainer& stop_words); 
 
-    explicit SearchServer(const std::string_view stop_words_text);
+    explicit SearchServer(std::string_view stop_words_text);
 
     explicit SearchServer(const std::string& stop_words_text);
     
@@ -69,8 +68,6 @@ public:
     
     template <typename Policy>
     void RemoveDocument(const Policy& policy, int document_id);
-
-    //void RemoveDocument(const std::execution::parallel_policy&, int document_id);
     
     std::tuple<std::vector<std::string_view>, DocumentStatus> MatchDocument(const std::execution::sequenced_policy&, const std::string_view raw_query, int document_id) const;
     
@@ -90,13 +87,11 @@ private:
 
         DocumentStatus status; 
 
-        std::vector<std::string> base;
-        
     }; 
 
+    std::deque<std::string> base;
+    
     const std::set<std::string, std::less<>> stop_words_; 
-
-   // std::deque<std::string> base;
 
     std::map<std::string_view, std::map<int, double>> word_to_document_freqs_;
     

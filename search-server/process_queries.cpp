@@ -18,9 +18,9 @@ std::vector<Document> ProcessQueriesJoined(
     std::vector<std::vector<Document>> answer;
     answer = ProcessQueries(search_server, queries);
     std::vector<Document> result;
-    for(auto a:answer){
-        for(auto c:a){
-            result.push_back(c);
+    for(std::vector<Document> documents :answer){
+        for(Document document : documents){
+            result.push_back(document);
         }
     }
     return result;   
